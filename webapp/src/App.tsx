@@ -1,13 +1,22 @@
 import React from 'react';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+// Routes
+import { Home } from './routes/Home';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+  },
+]);
 
 function App() {
   return (
-    <div className="App">
-      Hello Algorand!
-      <button className="btn btn-primary">
-        Hello
-      </button>
-    </div>
+    <RouterProvider router={router} />
   );
 }
 
