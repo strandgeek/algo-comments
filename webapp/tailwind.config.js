@@ -13,6 +13,7 @@ module.exports = {
     themes: [
       'light',
       'dark',
+      'winter'
     ]
   }
 }

@@ -5,6 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { client } from './client';
+import { CreateProjectPage } from './routes/CreateProjectPage';
 
 // Routes
 import { Home } from './routes/Home';
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: '/app/projects',
     element: <ProjectsPage />,
+  },
+  {
+    path: '/app/projects/create',
+    element: <CreateProjectPage />,
   },
 ]);
 
