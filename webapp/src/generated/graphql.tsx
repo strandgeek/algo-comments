@@ -84,6 +84,11 @@ export type BigIntFilter = {
   notIn?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
+export type BoolFilter = {
+  equals?: InputMaybe<Scalars['Boolean']>;
+  not?: InputMaybe<NestedBoolFilter>;
+};
+
 export type DateTimeFilter = {
   equals?: InputMaybe<Scalars['DateTime']>;
   gt?: InputMaybe<Scalars['DateTime']>;
@@ -137,6 +142,11 @@ export type NestedBigIntFilter = {
   notIn?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
+export type NestedBoolFilter = {
+  equals?: InputMaybe<Scalars['Boolean']>;
+  not?: InputMaybe<NestedBoolFilter>;
+};
+
 export type NestedDateTimeFilter = {
   equals?: InputMaybe<Scalars['DateTime']>;
   gt?: InputMaybe<Scalars['DateTime']>;
@@ -164,6 +174,7 @@ export type NestedStringFilter = {
 
 export type Project = {
   __typename?: 'Project';
+  activated: Scalars['Boolean'];
   apiToken: Scalars['String'];
   appAddress: Scalars['String'];
   appId: Scalars['BigInt'];
@@ -197,6 +208,7 @@ export type ProjectOrderByRelationAggregateInput = {
 };
 
 export type ProjectOrderByWithRelationInput = {
+  activated?: InputMaybe<SortOrder>;
   apiToken?: InputMaybe<SortOrder>;
   appAddress?: InputMaybe<SortOrder>;
   appId?: InputMaybe<SortOrder>;
@@ -211,6 +223,7 @@ export type ProjectOrderByWithRelationInput = {
 };
 
 export enum ProjectScalarFieldEnum {
+  Activated = 'activated',
   ApiToken = 'apiToken',
   AppAddress = 'appAddress',
   AppId = 'appId',
@@ -227,6 +240,7 @@ export type ProjectWhereInput = {
   AND?: InputMaybe<Array<ProjectWhereInput>>;
   NOT?: InputMaybe<Array<ProjectWhereInput>>;
   OR?: InputMaybe<Array<ProjectWhereInput>>;
+  activated?: InputMaybe<BoolFilter>;
   apiToken?: InputMaybe<StringFilter>;
   appAddress?: InputMaybe<StringFilter>;
   appId?: InputMaybe<BigIntFilter>;
@@ -312,7 +326,7 @@ export type ProjectQueryVariables = Exact<{
 }>;
 
 
-export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string } | null };
+export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, appId: any, appAddress: string, assetId: any, assetName: string, assetUnit: string, activated: boolean } | null };
 
 
 export const AuthDocument = gql`
@@ -459,6 +473,12 @@ export const ProjectDocument = gql`
   project(id: $id) {
     id
     name
+    appId
+    appAddress
+    assetId
+    assetName
+    assetUnit
+    activated
   }
 }
     `;

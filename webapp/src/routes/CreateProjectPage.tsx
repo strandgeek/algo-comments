@@ -107,7 +107,7 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
       navigate(`/app/projects/${res.data?.createProject.id}`)
     } catch (error) {
       toast.error('Could not create project')
-    }
+    } 
   };
   return (
     <AppLayout>

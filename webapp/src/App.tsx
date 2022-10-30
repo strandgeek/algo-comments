@@ -12,6 +12,8 @@ import { CreateProjectPage } from './routes/CreateProjectPage';
 // Routes
 import { Home } from './routes/Home';
 import { ProjectsPage } from './routes/ProjectsPage';
+import { ViewProjectPage } from './routes/ViewProjectPage';
+import { ActivateProjectPage } from './routes/ActivateProjectPage';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,14 @@ const router = createBrowserRouter([
   {
     path: '/app/projects/create',
     element: <CreateProjectPage />,
+  },
+  {
+    path: '/app/projects/:projectId',
+    element: <ViewProjectPage />,
+  },
+  {
+    path: '/app/projects/:projectId/activate',
+    element: <ActivateProjectPage />,
   },
 ]);
 
