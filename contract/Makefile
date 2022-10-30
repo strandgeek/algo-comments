@@ -4,7 +4,9 @@ VERSION=01
 .PHONY: build
 ## build: Compile the packages.
 build: clean
-	python ./compile.py contracts.$(NAME).step_$(VERSION) ./build/approval.teal ./build/clear.teal
+	python ./compile.py contracts.$(NAME).step_$(VERSION) ./build/approval.teal ./build/clear.teal ./build/contract.json
+## Copy builded contract into webapp
+	cp ./build/contract.json ../webapp/src/contract.json
 
 .PHONY: clean
 ## clean: Clean project and previous builds.

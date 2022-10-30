@@ -4,52 +4,48 @@ from pyteal_helpers import program
 
 UINT64_MAX = 0xFFFFFFFFFFFFFFFF
 
+# Constants
+SLUG_MAX_LENGTH = 256
+IPFS_HASH_LENGTH = 46
 
 def approval():
     # globals
     global_owner = Bytes("owner")  # byteslice
-    global_counter = Bytes("counter")  # uint64
 
-    op_increment = Bytes("inc")
-    op_decrement = Bytes("dec")
+    # op codes
+    op_optin_asset = Bytes("optin_asset")
+    op_post_comment = Bytes("post_comment")
 
-    scratch_counter = ScratchVar(TealType.uint64)
+    optin_asset = Seq([
+        InnerTxnBuilder.Begin(),
+        InnerTxnBuilder.SetFields(
+            {
+                TxnField.type_enum: TxnType.AssetTransfer,
+                TxnField.asset_receiver: Global.current_application_address(),
+                TxnField.xfer_asset: Txn.assets[0],
+                TxnField.asset_amount: Int(0),
+            }
+        ),
+        InnerTxnBuilder.Submit(),
+        Approve(),
+    ])
 
-    increment = Seq(
-        [
-            scratch_counter.store(App.globalGet(global_counter)),
-            # check overflow
-            If(
-                scratch_counter.load() < Int(UINT64_MAX),
-                App.globalPut(global_counter, scratch_counter.load() + Int(1)),
-            ),
-            Approve(),
-        ]
-    )
+    post_comment= Seq([
+        Assert(Len(Txn.note()) > Int(SLUG_MAX_LENGTH) + Int(IPFS_HASH_LENGTH)),
+        Approve(),
+    ])
 
-    decrement = Seq(
-        [
-            scratch_counter.store(App.globalGet(global_counter)),
-            # check underflow
-            If(
-                scratch_counter.load() > Int(0),
-                App.globalPut(global_counter, scratch_counter.load() - Int(1)),
-            ),
-            Approve(),
-        ]
-    )
 
     return program.event(
         init=Seq(
             [
                 App.globalPut(global_owner, Txn.sender()),
-                App.globalPut(global_counter, Int(0)),
                 Approve(),
             ]
         ),
         no_op=Cond(
-            [Txn.application_args[0] == op_increment, increment],
-            [Txn.application_args[0] == op_decrement, decrement],
+            [Txn.application_args[0] == op_optin_asset, optin_asset],
+            [Txn.application_args[0] == op_post_comment, post_comment],
         ),
     )
 
