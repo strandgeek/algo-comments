@@ -8,11 +8,16 @@ import { client } from './client';
 
 // Routes
 import { Home } from './routes/Home';
+import { ProjectsPage } from './routes/ProjectsPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
+  },
+  {
+    path: '/app/projects',
+    element: <ProjectsPage />,
   },
 ]);
 
