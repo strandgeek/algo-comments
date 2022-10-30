@@ -1,0 +1,7 @@
+mutation ActivateProject($input: ActivateProjectInput!) {
+  activateProject(input: $input) {
+    id
+    name
+    activated
+  }
+}

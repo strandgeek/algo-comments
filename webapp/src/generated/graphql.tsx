@@ -63,6 +63,10 @@ export type AccountWhereInput = {
   projects?: InputMaybe<ProjectListRelationFilter>;
 };
 
+export type ActivateProjectInput = {
+  projectId: Scalars['String'];
+};
+
 export type AuthInput = {
   pubKey: Scalars['String'];
   signedTxBase64: Scalars['String'];
@@ -109,11 +113,28 @@ export type GenerateNoncePayload = {
   nonce: Scalars['String'];
 };
 
+export type IntFilter = {
+  equals?: InputMaybe<Scalars['Int']>;
+  gt?: InputMaybe<Scalars['Int']>;
+  gte?: InputMaybe<Scalars['Int']>;
+  in?: InputMaybe<Array<Scalars['Int']>>;
+  lt?: InputMaybe<Scalars['Int']>;
+  lte?: InputMaybe<Scalars['Int']>;
+  not?: InputMaybe<NestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  activateProject: Project;
   auth: AuthPayload;
   createProject: Project;
   generateNonce: GenerateNoncePayload;
+};
+
+
+export type MutationActivateProjectArgs = {
+  input: ActivateProjectInput;
 };
 
 
@@ -158,6 +179,17 @@ export type NestedDateTimeFilter = {
   notIn?: InputMaybe<Array<Scalars['DateTime']>>;
 };
 
+export type NestedIntFilter = {
+  equals?: InputMaybe<Scalars['Int']>;
+  gt?: InputMaybe<Scalars['Int']>;
+  gte?: InputMaybe<Scalars['Int']>;
+  in?: InputMaybe<Array<Scalars['Int']>>;
+  lt?: InputMaybe<Scalars['Int']>;
+  lte?: InputMaybe<Scalars['Int']>;
+  not?: InputMaybe<NestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']>>;
+};
+
 export type NestedStringFilter = {
   contains?: InputMaybe<Scalars['String']>;
   endsWith?: InputMaybe<Scalars['String']>;
@@ -178,6 +210,7 @@ export type Project = {
   apiToken: Scalars['String'];
   appAddress: Scalars['String'];
   appId: Scalars['BigInt'];
+  assetDecimals: Scalars['Int'];
   assetId: Scalars['BigInt'];
   assetName: Scalars['String'];
   assetUnit: Scalars['String'];
@@ -191,6 +224,7 @@ export type Project = {
 export type ProjectCreateInput = {
   appAddress: Scalars['String'];
   appId: Scalars['Float'];
+  assetDecimals: Scalars['Float'];
   assetId: Scalars['Float'];
   assetName: Scalars['String'];
   assetUnit: Scalars['String'];
@@ -212,6 +246,7 @@ export type ProjectOrderByWithRelationInput = {
   apiToken?: InputMaybe<SortOrder>;
   appAddress?: InputMaybe<SortOrder>;
   appId?: InputMaybe<SortOrder>;
+  assetDecimals?: InputMaybe<SortOrder>;
   assetId?: InputMaybe<SortOrder>;
   assetName?: InputMaybe<SortOrder>;
   assetUnit?: InputMaybe<SortOrder>;
@@ -227,6 +262,7 @@ export enum ProjectScalarFieldEnum {
   ApiToken = 'apiToken',
   AppAddress = 'appAddress',
   AppId = 'appId',
+  AssetDecimals = 'assetDecimals',
   AssetId = 'assetId',
   AssetName = 'assetName',
   AssetUnit = 'assetUnit',
@@ -244,6 +280,7 @@ export type ProjectWhereInput = {
   apiToken?: InputMaybe<StringFilter>;
   appAddress?: InputMaybe<StringFilter>;
   appId?: InputMaybe<BigIntFilter>;
+  assetDecimals?: InputMaybe<IntFilter>;
   assetId?: InputMaybe<BigIntFilter>;
   assetName?: InputMaybe<StringFilter>;
   assetUnit?: InputMaybe<StringFilter>;
@@ -295,6 +332,13 @@ export type StringFilter = {
   startsWith?: InputMaybe<Scalars['String']>;
 };
 
+export type ActivateProjectMutationVariables = Exact<{
+  input: ActivateProjectInput;
+}>;
+
+
+export type ActivateProjectMutation = { __typename?: 'Mutation', activateProject: { __typename?: 'Project', id: string, name: string, activated: boolean } };
+
 export type AuthMutationVariables = Exact<{
   input: AuthInput;
 }>;
@@ -326,9 +370,44 @@ export type ProjectQueryVariables = Exact<{
 }>;
 
 
-export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, appId: any, appAddress: string, assetId: any, assetName: string, assetUnit: string, activated: boolean } | null };
+export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, appId: any, appAddress: string, assetId: any, assetName: string, assetUnit: string, assetDecimals: number, activated: boolean } | null };
 
 
+export const ActivateProjectDocument = gql`
+    mutation ActivateProject($input: ActivateProjectInput!) {
+  activateProject(input: $input) {
+    id
+    name
+    activated
+  }
+}
+    `;
+export type ActivateProjectMutationFn = Apollo.MutationFunction<ActivateProjectMutation, ActivateProjectMutationVariables>;
+
+/**
+ * __useActivateProjectMutation__
+ *
+ * To run a mutation, you first call `useActivateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActivateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [activateProjectMutation, { data, loading, error }] = useActivateProjectMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useActivateProjectMutation(baseOptions?: Apollo.MutationHookOptions<ActivateProjectMutation, ActivateProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ActivateProjectMutation, ActivateProjectMutationVariables>(ActivateProjectDocument, options);
+      }
+export type ActivateProjectMutationHookResult = ReturnType<typeof useActivateProjectMutation>;
+export type ActivateProjectMutationResult = Apollo.MutationResult<ActivateProjectMutation>;
+export type ActivateProjectMutationOptions = Apollo.BaseMutationOptions<ActivateProjectMutation, ActivateProjectMutationVariables>;
 export const AuthDocument = gql`
     mutation Auth($input: AuthInput!) {
   auth(input: $input) {
@@ -478,6 +557,7 @@ export const ProjectDocument = gql`
     assetId
     assetName
     assetUnit
+    assetDecimals
     activated
   }
 }

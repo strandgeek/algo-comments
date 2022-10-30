@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { algoClient, indexerClient } from "../algo";
 import algosdk from "algosdk";
 import { toast } from "react-toastify";
+import contract from "../contract.json";
 
 export interface CreateProjectPageProps {}
 
@@ -18,21 +19,25 @@ interface FormData {
 interface AssetParams {
   name: string;
   unit: string;
+  decimals: number;
 }
 
 const getAssetById = async (assetId: string): Promise<AssetParams | null> => {
   try {
-    const { asset } = await indexerClient.lookupAssetByID(parseInt(assetId)).do()
-    console.log(asset.params)
-    const { params } = asset
+    const { asset } = await indexerClient
+      .lookupAssetByID(parseInt(assetId))
+      .do();
+    console.log(asset.params);
+    const { params } = asset;
     return {
       name: params.name,
-      unit: params['unit-name'],
-    }
+      unit: params["unit-name"],
+      decimals: params.decimals,
+    };
   } catch (error) {
-    return null
+    return null;
   }
-}
+};
 
 export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
   const navigate = useNavigate();
@@ -40,7 +45,10 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
   const [createProjectMutate] = useCreateProjectMutation();
   const { data: meData } = useMeQuery();
 
-  const deployApp = async (): Promise<{ appId: number, appAddress: string }> => {
+  const deployApp = async (): Promise<{
+    appId: number;
+    appAddress: string;
+  }> => {
     const { AlgoSigner } = window;
     const params = await algoClient.getTransactionParams().do();
 
@@ -49,14 +57,16 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
         ...params,
       },
       from: meData?.me?.address!,
-      numLocalByteSlices: 4,
-      numGlobalByteSlices: 2,
+      numLocalByteSlices: 0,
+      numGlobalByteSlices: 1,
       numLocalInts: 0,
-      numGlobalInts: 2,
+      numGlobalInts: 0,
       approvalProgram: new Uint8Array(
-        Buffer.from("AiADAAEFIjEYEkEAAiNDMRkkEg==", "base64")
+        Buffer.from(contract.approval_base64, "base64")
       ),
-      clearProgram: new Uint8Array(Buffer.from("AiABASJD", "base64")),
+      clearProgram: new Uint8Array(
+        Buffer.from(contract.clear_base64, "base64")
+      ),
       onComplete: 0,
       foreignAssets: [],
     });
@@ -81,14 +91,14 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
     return {
       appId,
       appAddress,
-    }
+    };
   };
 
   const onSubmit = async ({ name, assetId }: FormData) => {
-    const asset = await getAssetById(assetId)
+    const asset = await getAssetById(assetId);
     if (!asset) {
-      toast.error('Could not locate asset on Testnet')
-      return
+      toast.error("Could not locate asset on Testnet");
+      return;
     }
     const { appId, appAddress } = await deployApp();
     try {
@@ -100,14 +110,15 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
             assetId: parseInt(assetId),
             assetName: asset.name,
             assetUnit: asset.unit,
+            assetDecimals: asset.decimals,
             name,
-          }
-        }
-      })
-      navigate(`/app/projects/${res.data?.createProject.id}`)
+          },
+        },
+      });
+      navigate(`/app/projects/${res.data?.createProject.id}`);
     } catch (error) {
-      toast.error('Could not create project')
-    } 
+      toast.error("Could not create project");
+    }
   };
   return (
     <AppLayout>
@@ -137,7 +148,9 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
                 {...register("assetId")}
               />
               <label className="label">
-                <span className="label-text-alt">The asset used to reward users</span>
+                <span className="label-text-alt">
+                  The asset used to reward users
+                </span>
               </label>
             </div>
             <div className="form-control w-full mt-4">
@@ -151,7 +164,9 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
                 {...register("name")}
               />
               <label className="label">
-                <span className="label-text-alt">The amount of token a user should be rewarded per comment</span>
+                <span className="label-text-alt">
+                  The amount of token a user should be rewarded per comment
+                </span>
               </label>
             </div>
             <button type="submit" className="btn btn-primary mt-4 w-full">

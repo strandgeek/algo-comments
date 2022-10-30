@@ -1,7 +1,9 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { FundAlgorandForm } from '../components/FundAlgorandForm'
+import { FundTokenForm } from '../components/FundTokenForm'
 import { OptInTokenForm } from '../components/OptInTokenForm'
+import { useActivateProjectMutation } from '../generated/graphql'
 import { useProjectInfo } from '../hooks/useProjectInfo'
 import { AppLayout } from '../layouts/AppLayout'
 
@@ -18,11 +20,13 @@ const STEPS = [
 export const ActivateProjectPage: FC<ActivateProjectPageProps> = (props) => {
   const [step, setStep] = useState<string>()
   const navigate = useNavigate()
+  const [activateMutate] = useActivateProjectMutation()
   const params = useParams()
   const projectInfo = useProjectInfo(params.projectId as string)
   useEffect(() => {
+    console.log(projectInfo)
     if (projectInfo) {
-      if (projectInfo.algoBalance && projectInfo.algoBalance === 0) {
+      if (projectInfo.algoBalance != null && projectInfo.algoBalance === 0) {
         setStep('FUND_ALGORAND')
       } else {
         setStep('OPT_IN_TOKEN')
@@ -35,6 +39,17 @@ export const ActivateProjectPage: FC<ActivateProjectPageProps> = (props) => {
       return 'step step-primary'
     }
     return 'step'
+  }
+
+  const onCompleted = async () => {
+    await activateMutate({
+      variables: {
+        input: {
+          projectId: projectInfo?.id!,
+        }
+      }
+    })
+    navigate(`/app/projects/${projectInfo?.id}`)
   }
 
   return (
@@ -59,7 +74,10 @@ export const ActivateProjectPage: FC<ActivateProjectPageProps> = (props) => {
               <FundAlgorandForm projectInfo={projectInfo} onFinish={() => setStep('OPT_IN_TOKEN')} />
             )}
             {step === 'OPT_IN_TOKEN' && (
-              <OptInTokenForm projectInfo={projectInfo} onFinish={() => setStep('OPT_IN_TOKEN')} />
+              <OptInTokenForm projectInfo={projectInfo} onFinish={() => setStep('FUND_TOKEN')} />
+            )}
+            {step === 'FUND_TOKEN' && (
+              <FundTokenForm projectInfo={projectInfo} onFinish={() => onCompleted()} />
             )}
           </>
         )}
