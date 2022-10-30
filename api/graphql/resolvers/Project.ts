@@ -7,6 +7,21 @@ import { generateRandomToken } from "../../src/utils/generateRandomToken";
 export class ProjectCreateInput {
   @Field()
   name: string;
+
+  @Field()
+  assetId: number;
+
+  @Field()
+  assetName: string;
+
+  @Field()
+  assetUnit: string;
+
+  @Field()
+  appId: number;
+
+  @Field()
+  appAddress: string;
 }
 
 @Resolver()
@@ -25,14 +40,19 @@ export class ProjectResolver {
       data: {
         name: input.name,
         ownerId: me.id,
-        apiToken: generateRandomToken(64)
+        apiToken: generateRandomToken(64),
+        assetId: input.assetId,
+        assetName: input.assetName,
+        assetUnit: input.assetUnit,
+        appId: input.appId,
+        appAddress: input.appAddress,
       }
     })
     return project
   }
 
   @Authorized()
-  @Query(() => Project, { nullable: true})
+  @Query(() => Project, { nullable: true })
   async project(
     @Arg("id") id: string,
     @Ctx() ctx: Context
