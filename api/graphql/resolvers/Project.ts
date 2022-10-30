@@ -18,10 +18,19 @@ export class ProjectCreateInput {
   assetUnit: string;
 
   @Field()
+  assetDecimals: number;
+
+  @Field()
   appId: number;
 
   @Field()
   appAddress: string;
+}
+
+@InputType()
+export class ActivateProjectInput {
+  @Field()
+  projectId: string;
 }
 
 @Resolver()
@@ -44,11 +53,46 @@ export class ProjectResolver {
         assetId: input.assetId,
         assetName: input.assetName,
         assetUnit: input.assetUnit,
+        assetDecimals: input.assetDecimals,
         appId: input.appId,
         appAddress: input.appAddress,
       }
     })
     return project
+  }
+
+  @Authorized()
+  @Mutation(() => Project)
+  async activateProject(
+    @Arg("input") input: ActivateProjectInput,
+    @Ctx() ctx: Context
+  ): Promise<Project | null> {
+    const { me, prisma } = ctx
+    if (!me) {
+      return null
+    }
+    const project = await prisma.project.findUnique({
+      where: {
+        id: input.projectId,
+      },
+      include: {
+        owner: true,
+      }
+    })
+    if (!project) {
+      throw new Error('project not found')
+    }
+    if (project.owner.address != ctx.me?.address) {
+      throw new Error('forbidden')
+    }
+    return prisma.project.update({
+      data: {
+        activated: true,
+      },
+      where: {
+        id: project.id,
+      }
+    })
   }
 
   @Authorized()

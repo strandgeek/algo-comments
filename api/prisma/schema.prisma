@@ -20,15 +20,17 @@ model Account {
 }
 
 model Project {
-  id         String   @id @default(uuid())
-  name       String
-  apiToken   String   @unique
-  ownerId    String
-  owner      Account  @relation(fields: [ownerId], references: [id])
-  assetId    BigInt
-  assetName  String
-  assetUnit  String
-  appId      BigInt
-  appAddress String
-  createdAt  DateTime @default(now())
+  id            String   @id @default(uuid())
+  name          String
+  apiToken      String   @unique
+  ownerId       String
+  owner         Account  @relation(fields: [ownerId], references: [id])
+  assetId       BigInt
+  assetName     String
+  assetUnit     String
+  assetDecimals Int
+  appId         BigInt
+  appAddress    String
+  activated     Boolean  @default(false)
+  createdAt     DateTime @default(now())
 }
