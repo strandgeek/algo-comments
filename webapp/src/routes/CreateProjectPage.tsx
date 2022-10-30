@@ -5,6 +5,7 @@ import { useCreateProjectMutation, useMeQuery } from "../generated/graphql";
 import { useForm } from "react-hook-form";
 import { algoClient, indexerClient } from "../algo";
 import algosdk from "algosdk";
+import { toast } from "react-toastify";
 
 export interface CreateProjectPageProps {}
 
@@ -14,13 +15,32 @@ interface FormData {
   rewardAmountPerComment: string;
 }
 
+interface AssetParams {
+  name: string;
+  unit: string;
+}
+
+const getAssetById = async (assetId: string): Promise<AssetParams | null> => {
+  try {
+    const { asset } = await indexerClient.lookupAssetByID(parseInt(assetId)).do()
+    console.log(asset.params)
+    const { params } = asset
+    return {
+      name: params.name,
+      unit: params['unit-name'],
+    }
+  } catch (error) {
+    return null
+  }
+}
+
 export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<FormData>();
   const [createProjectMutate] = useCreateProjectMutation();
   const { data: meData } = useMeQuery();
 
-  const deployApp = async () => {
+  const deployApp = async (): Promise<{ appId: number, appAddress: string }> => {
     const { AlgoSigner } = window;
     const params = await algoClient.getTransactionParams().do();
 
@@ -58,27 +78,36 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
     const appId = confirmedTxn["application-index"];
     const appAddress = algosdk.getApplicationAddress(appId);
 
-    // TODO: Submit on mutation the appId and appAddress
-    console.log({
+    return {
       appId,
       appAddress,
-    });
+    }
   };
 
-  const onSubmit = async ({ name }: FormData) => {
-    await deployApp();
-    // try {
-    //   const res = await createProjectMutate({
-    //     variables: {
-    //       input: {
-    //         name,
-    //       }
-    //     }
-    //   })
-    //   navigate(`/app/projects/${res.data?.createProject.id}`)
-    // } catch (error) {
-    //   toast.error('Could not create project')
-    // }
+  const onSubmit = async ({ name, assetId }: FormData) => {
+    const asset = await getAssetById(assetId)
+    if (!asset) {
+      toast.error('Could not locate asset on Testnet')
+      return
+    }
+    const { appId, appAddress } = await deployApp();
+    try {
+      const res = await createProjectMutate({
+        variables: {
+          input: {
+            appId,
+            appAddress,
+            assetId: parseInt(assetId),
+            assetName: asset.name,
+            assetUnit: asset.unit,
+            name,
+          }
+        }
+      })
+      navigate(`/app/projects/${res.data?.createProject.id}`)
+    } catch (error) {
+      toast.error('Could not create project')
+    }
   };
   return (
     <AppLayout>

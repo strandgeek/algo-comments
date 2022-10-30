@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  BigInt: any;
   DateTime: any;
 };
 
@@ -72,6 +73,17 @@ export type AuthPayload = {
   token: Scalars['String'];
 };
 
+export type BigIntFilter = {
+  equals?: InputMaybe<Scalars['BigInt']>;
+  gt?: InputMaybe<Scalars['BigInt']>;
+  gte?: InputMaybe<Scalars['BigInt']>;
+  in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lt?: InputMaybe<Scalars['BigInt']>;
+  lte?: InputMaybe<Scalars['BigInt']>;
+  not?: InputMaybe<NestedBigIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['BigInt']>>;
+};
+
 export type DateTimeFilter = {
   equals?: InputMaybe<Scalars['DateTime']>;
   gt?: InputMaybe<Scalars['DateTime']>;
@@ -114,6 +126,17 @@ export type MutationGenerateNonceArgs = {
   input: GenerateNonceInput;
 };
 
+export type NestedBigIntFilter = {
+  equals?: InputMaybe<Scalars['BigInt']>;
+  gt?: InputMaybe<Scalars['BigInt']>;
+  gte?: InputMaybe<Scalars['BigInt']>;
+  in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lt?: InputMaybe<Scalars['BigInt']>;
+  lte?: InputMaybe<Scalars['BigInt']>;
+  not?: InputMaybe<NestedBigIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['BigInt']>>;
+};
+
 export type NestedDateTimeFilter = {
   equals?: InputMaybe<Scalars['DateTime']>;
   gt?: InputMaybe<Scalars['DateTime']>;
@@ -142,6 +165,11 @@ export type NestedStringFilter = {
 export type Project = {
   __typename?: 'Project';
   apiToken: Scalars['String'];
+  appAddress: Scalars['String'];
+  appId: Scalars['BigInt'];
+  assetId: Scalars['BigInt'];
+  assetName: Scalars['String'];
+  assetUnit: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   name: Scalars['String'];
@@ -150,6 +178,11 @@ export type Project = {
 };
 
 export type ProjectCreateInput = {
+  appAddress: Scalars['String'];
+  appId: Scalars['Float'];
+  assetId: Scalars['Float'];
+  assetName: Scalars['String'];
+  assetUnit: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -165,6 +198,11 @@ export type ProjectOrderByRelationAggregateInput = {
 
 export type ProjectOrderByWithRelationInput = {
   apiToken?: InputMaybe<SortOrder>;
+  appAddress?: InputMaybe<SortOrder>;
+  appId?: InputMaybe<SortOrder>;
+  assetId?: InputMaybe<SortOrder>;
+  assetName?: InputMaybe<SortOrder>;
+  assetUnit?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
@@ -174,6 +212,11 @@ export type ProjectOrderByWithRelationInput = {
 
 export enum ProjectScalarFieldEnum {
   ApiToken = 'apiToken',
+  AppAddress = 'appAddress',
+  AppId = 'appId',
+  AssetId = 'assetId',
+  AssetName = 'assetName',
+  AssetUnit = 'assetUnit',
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
@@ -185,6 +228,11 @@ export type ProjectWhereInput = {
   NOT?: InputMaybe<Array<ProjectWhereInput>>;
   OR?: InputMaybe<Array<ProjectWhereInput>>;
   apiToken?: InputMaybe<StringFilter>;
+  appAddress?: InputMaybe<StringFilter>;
+  appId?: InputMaybe<BigIntFilter>;
+  assetId?: InputMaybe<BigIntFilter>;
+  assetName?: InputMaybe<StringFilter>;
+  assetUnit?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
