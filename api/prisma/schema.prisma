@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider      = "typegraphql-prisma"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id        String    @id @default(uuid())
+  address   String    @unique
+  projects  Project[]
+  createdAt DateTime  @default(now())
+}
+
+model Project {
+  id                  String               @id @default(uuid())
+  name                String
+  apiToken            String               @unique
+  ownerId             String
+  owner               Account              @relation(fields: [ownerId], references: [id])
+  createdAt           DateTime             @default(now())
+}
