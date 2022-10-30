@@ -1,0 +1,5 @@
+mutation GenerateNonce($input: GenerateNonceInput!) {
+  generateNonce(input: $input) {
+    nonce
+  }
+}

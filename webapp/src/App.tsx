@@ -1,8 +1,10 @@
+import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { client } from './client';
 
 // Routes
 import { Home } from './routes/Home';
@@ -16,7 +18,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <ApolloProvider client={client}>
+      <RouterProvider router={router} />
+    </ApolloProvider>
   );
 }
 

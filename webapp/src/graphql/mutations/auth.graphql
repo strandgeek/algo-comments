@@ -1,0 +1,5 @@
+mutation Auth($input: AuthInput!) {
+  auth(input: $input) {
+    token
+  }
+}
