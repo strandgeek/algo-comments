@@ -58,18 +58,22 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
       },
       from: meData?.me?.address!,
       numLocalByteSlices: 0,
-      numGlobalByteSlices: 1,
+      numGlobalByteSlices: 2,
       numLocalInts: 0,
-      numGlobalInts: 0,
+      numGlobalInts: 1,
       approvalProgram: new Uint8Array(
         Buffer.from(contract.approval_base64, "base64")
       ),
       clearProgram: new Uint8Array(
         Buffer.from(contract.clear_base64, "base64")
       ),
+      appArgs: [
+        algosdk.encodeUint64(1000)
+      ],
       onComplete: 0,
       foreignAssets: [],
     });
+    
 
     let txn_b64 = AlgoSigner.encoding.msgpackToBase64(txn.toByte());
 
