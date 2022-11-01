@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "rescripts start",
-    "build": "rescripts build",
+    "build": "NODE_ENV=production rescripts build",
     "test": "rescripts test",
     "eject": "rescripts eject",
     "gqlgen": "graphql-codegen --config codegen.yml"
