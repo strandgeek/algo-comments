@@ -14,11 +14,12 @@ import { Home } from './routes/Home';
 import { ProjectsPage } from './routes/ProjectsPage';
 import { ViewProjectPage } from './routes/ViewProjectPage';
 import { ActivateProjectPage } from './routes/ActivateProjectPage';
+import { HomePage } from './routes/HomePage';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <HomePage />,
   },
   {
     path: '/app/projects',
