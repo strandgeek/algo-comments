@@ -15,6 +15,8 @@ export interface NewCommentProps {
 }
 import classnames from 'classnames'
 
+const getAlgoSigner = () => window.AlgoSigner
+
 export const NewComment: FC<NewCommentProps> = ({ project, config, onSubmit: onSubmitCallback }) => {
   const [loading, setLoading] = useState(false)
   const [account, setAccount] = useState<any>();
@@ -37,7 +39,7 @@ export const NewComment: FC<NewCommentProps> = ({ project, config, onSubmit: onS
     const { url } = data.createCommentMetadata;
     const cid = url.replace("ipfs://", "");
 
-    const { AlgoSigner } = window;
+    const AlgoSigner = getAlgoSigner()
     await AlgoSigner.connect();
 
     const accounts = await AlgoSigner.accounts({
@@ -82,7 +84,7 @@ export const NewComment: FC<NewCommentProps> = ({ project, config, onSubmit: onS
 
   const optinToken = async () => {
     setLoading(true)
-    const { AlgoSigner } = window;
+    const AlgoSigner = getAlgoSigner()
     const params = await algoClient.getTransactionParams().do();
     const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: account.address,
@@ -114,7 +116,7 @@ export const NewComment: FC<NewCommentProps> = ({ project, config, onSubmit: onS
 
   const connectWallet = async () => {
     setLoading(true)
-    const { AlgoSigner } = window;
+    const AlgoSigner = getAlgoSigner()
     await AlgoSigner.connect();
     const accounts = await AlgoSigner.accounts({
       ledger: "TestNet",
