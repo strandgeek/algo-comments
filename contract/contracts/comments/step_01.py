@@ -45,7 +45,7 @@ def approval():
     ])
 
     post_comment= Seq([
-        Assert(Len(Txn.note()) > Int(SLUG_MAX_LENGTH) + Int(IPFS_HASH_LENGTH)),
+        Assert(Len(Txn.note()) >= Int(SLUG_MAX_LENGTH) + Int(IPFS_HASH_LENGTH)),
         Approve(),
     ])
 
