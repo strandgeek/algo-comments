@@ -1,7 +1,7 @@
-const nodeExternals = require('webpack-node-externals');
+const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
-  entry: '/src/lib/index.js',
+  entry: "/src/lib/index.tsx",
   output: {
     filename: "main.js",
     libraryTarget: "umd",
@@ -9,29 +9,27 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
+        loader: "ts-loader",
       },
       {
         test: /\.scss$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'style-loader',
-            options: { injectType: 'singletonStyleTag' }
+            loader: "style-loader",
+            options: { injectType: "singletonStyleTag" },
           },
           "css-loader",
-          "sass-loader"
-        ]
+          "sass-loader",
+        ],
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        loader: 'url-loader',
+        loader: "url-loader",
       },
     ],
   },
-  externals: [nodeExternals()]
+  externals: [nodeExternals()],
 };

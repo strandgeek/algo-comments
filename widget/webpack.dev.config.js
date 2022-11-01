@@ -4,9 +4,10 @@ const Dotenv = require('dotenv-webpack');
 
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.tsx',
   devtool : 'inline-source-map',
   resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ],
     fallback: {
       crypto: require.resolve("crypto-browserify"),
       stream: require.resolve("stream-browserify"),
@@ -28,11 +29,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
+        loader: "ts-loader",
       },
       {
         test: /\.scss$/,

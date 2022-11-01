@@ -1,0 +1,13 @@
+query Project($id: String!) {
+  project(id: $id) {
+    id
+    name
+    appId
+    appAddress
+    assetId
+    assetName
+    assetUnit
+    assetDecimals
+    activated
+  }
+}
