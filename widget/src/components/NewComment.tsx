@@ -53,6 +53,9 @@ export const NewComment: FC<NewCommentProps> = ({ project, config, onSubmit: onS
       appIndex: project?.appId,
       appArgs: [new Uint8Array(Buffer.from("post_comment"))],
       note: new Uint8Array(Buffer.from(noteStr)),
+      foreignAssets: [
+        project?.assetId,
+      ] ,    
       suggestedParams: {
         ...params,
       },
