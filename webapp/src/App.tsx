@@ -15,6 +15,7 @@ import { ProjectsPage } from './routes/ProjectsPage';
 import { ViewProjectPage } from './routes/ViewProjectPage';
 import { ActivateProjectPage } from './routes/ActivateProjectPage';
 import { HomePage } from './routes/HomePage';
+import { ConfigPage } from './routes/ConfigPage';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: '/app/projects/:projectId/activate',
     element: <ActivateProjectPage />,
+  },
+  {
+    path: '/app/projects/:projectId/configuration',
+    element: <ConfigPage />,
   },
 ]);
 

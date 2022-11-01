@@ -93,6 +93,15 @@ export type BoolFilter = {
   not?: InputMaybe<NestedBoolFilter>;
 };
 
+export type CreateCommentMetadataInput = {
+  message: Scalars['String'];
+};
+
+export type CreateCommentMetadataPayload = {
+  __typename?: 'CreateCommentMetadataPayload';
+  url: Scalars['String'];
+};
+
 export type DateTimeFilter = {
   equals?: InputMaybe<Scalars['DateTime']>;
   gt?: InputMaybe<Scalars['DateTime']>;
@@ -128,8 +137,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   activateProject: Project;
   auth: AuthPayload;
+  createCommentMetadata: CreateCommentMetadataPayload;
   createProject: Project;
   generateNonce: GenerateNoncePayload;
+  updateProject: Project;
 };
 
 
@@ -143,6 +154,11 @@ export type MutationAuthArgs = {
 };
 
 
+export type MutationCreateCommentMetadataArgs = {
+  input: CreateCommentMetadataInput;
+};
+
+
 export type MutationCreateProjectArgs = {
   input: ProjectCreateInput;
 };
@@ -150,6 +166,11 @@ export type MutationCreateProjectArgs = {
 
 export type MutationGenerateNonceArgs = {
   input: GenerateNonceInput;
+};
+
+
+export type MutationUpdateProjectArgs = {
+  input: ProjectUpdateInput;
 };
 
 export type NestedBigIntFilter = {
@@ -272,6 +293,11 @@ export enum ProjectScalarFieldEnum {
   OwnerId = 'ownerId'
 }
 
+export type ProjectUpdateInput = {
+  name: Scalars['String'];
+  projectId: Scalars['String'];
+};
+
 export type ProjectWhereInput = {
   AND?: InputMaybe<Array<ProjectWhereInput>>;
   NOT?: InputMaybe<Array<ProjectWhereInput>>;
@@ -359,6 +385,13 @@ export type GenerateNonceMutationVariables = Exact<{
 
 
 export type GenerateNonceMutation = { __typename?: 'Mutation', generateNonce: { __typename?: 'GenerateNoncePayload', nonce: string } };
+
+export type UpdateProjectMutationVariables = Exact<{
+  input: ProjectUpdateInput;
+}>;
+
+
+export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject: { __typename?: 'Project', name: string } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -508,6 +541,39 @@ export function useGenerateNonceMutation(baseOptions?: Apollo.MutationHookOption
 export type GenerateNonceMutationHookResult = ReturnType<typeof useGenerateNonceMutation>;
 export type GenerateNonceMutationResult = Apollo.MutationResult<GenerateNonceMutation>;
 export type GenerateNonceMutationOptions = Apollo.BaseMutationOptions<GenerateNonceMutation, GenerateNonceMutationVariables>;
+export const UpdateProjectDocument = gql`
+    mutation UpdateProject($input: ProjectUpdateInput!) {
+  updateProject(input: $input) {
+    name
+  }
+}
+    `;
+export type UpdateProjectMutationFn = Apollo.MutationFunction<UpdateProjectMutation, UpdateProjectMutationVariables>;
+
+/**
+ * __useUpdateProjectMutation__
+ *
+ * To run a mutation, you first call `useUpdateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProjectMutation, { data, loading, error }] = useUpdateProjectMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateProjectMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProjectMutation, UpdateProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProjectMutation, UpdateProjectMutationVariables>(UpdateProjectDocument, options);
+      }
+export type UpdateProjectMutationHookResult = ReturnType<typeof useUpdateProjectMutation>;
+export type UpdateProjectMutationResult = Apollo.MutationResult<UpdateProjectMutation>;
+export type UpdateProjectMutationOptions = Apollo.BaseMutationOptions<UpdateProjectMutation, UpdateProjectMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

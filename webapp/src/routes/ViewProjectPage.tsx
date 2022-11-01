@@ -109,7 +109,7 @@ export const ViewProjectPage: FC<ViewProjectPageProps> = (props) => {
             </svg>
             <span>
               You can reward up to{" "}
-              <strong>{formatNumber(Math.round(tokenBalance / rewardPerComment))} comments</strong>{" "}
+              <strong>{formatNumber(Math.floor(tokenBalance / rewardPerComment))} comments</strong>{" "}
               with the current {projectInfo?.assetUnit} balance
             </span>
           </div>

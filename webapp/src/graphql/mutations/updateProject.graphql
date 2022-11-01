@@ -1,0 +1,5 @@
+mutation UpdateProject($input: ProjectUpdateInput!) {
+  updateProject(input: $input) {
+    name
+  }
+}

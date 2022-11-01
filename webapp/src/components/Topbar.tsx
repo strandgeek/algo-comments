@@ -44,19 +44,19 @@ export const Topbar: FC<TopbarProps> = ({ me, noProjectLinks = false }) => {
   };
   const assetsLink = `/app/projects/${params.projectId}`;
   const configLink = `/app/projects/${params.projectId}/configuration`;
-  const mintedAssetsLink = `/app/projects/${params.projectId}/minted-assets`;
+  const integrationLink = `/app/projects/${params.projectId}/integration`;
   const links: NavigationLink[] = noProjectLinks
     ? []
     : [
         {
-          name: "Assets",
+          name: "Dashboard",
           to: `/app/projects/${params.projectId}`,
           current: location.pathname === assetsLink,
         },
         {
-          name: "Minted Assets",
-          to: mintedAssetsLink,
-          current: location.pathname === mintedAssetsLink,
+          name: "Integration",
+          to: integrationLink,
+          current: location.pathname === integrationLink,
         },
         {
           name: "Configuration",
