@@ -16,6 +16,7 @@ import { ViewProjectPage } from './routes/ViewProjectPage';
 import { ActivateProjectPage } from './routes/ActivateProjectPage';
 import { HomePage } from './routes/HomePage';
 import { ConfigPage } from './routes/ConfigPage';
+import { IntegrationPage } from './routes/IntegrationPage';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: '/app/projects/:projectId/configuration',
     element: <ConfigPage />,
+  },
+  {
+    path: '/app/projects/:projectId/integration',
+    element: <IntegrationPage />,
   },
 ]);
 
