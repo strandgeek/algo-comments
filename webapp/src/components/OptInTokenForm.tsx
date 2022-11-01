@@ -1,5 +1,6 @@
 import algosdk from "algosdk";
-import React, { FC } from "react";
+import classNames from "classnames";
+import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { algoClient } from "../algo";
 import { useMeQuery } from "../generated/graphql";
@@ -19,9 +20,11 @@ export const OptInTokenForm: FC<FundAlgorandFormProps> = ({
   onFinish,
 }) => {
   const { AlgoSigner } = window
+  const [loading, setLoading] = useState(false)
   const { data: meData } = useMeQuery()
   const { handleSubmit } = useForm<FormData>();
   const onSubmit = async ({ amount }: FormData) => {
+    setLoading(true)
     // TODO: Call the Inner Transaction Builder Opt-In opcode
 
     const params = await algoClient.getTransactionParams().do();
@@ -49,16 +52,13 @@ export const OptInTokenForm: FC<FundAlgorandFormProps> = ({
       tx: signedTxns[0].blob
     })
 
-    const txConfirmed = await algosdk.waitForConfirmation(
+    await algosdk.waitForConfirmation(
       algoClient,
       tx.txId,
       4
     );
 
-    console.log(txConfirmed)
-
-
-
+    setLoading(false)
     onFinish()
   };
   return (
@@ -70,7 +70,18 @@ export const OptInTokenForm: FC<FundAlgorandFormProps> = ({
           </div>
         </div>
         <div className="border-t border-base-300 p-8 flex justify-end">
-          <button type="submit" className="btn btn-primary btn-block">Opt-In Token</button>
+          <button
+            type="submit"
+            className={classNames(
+              "btn btn-primary btn-block",
+              {
+                loading,
+                'opacity-70': loading,
+              }
+            )}
+          >
+            Opt-In Token
+          </button>
         </div>
       </form>
     </>

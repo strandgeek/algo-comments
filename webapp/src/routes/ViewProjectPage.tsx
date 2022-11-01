@@ -1,9 +1,11 @@
+import { ExternalLinkIcon } from "@heroicons/react/outline";
 import React, { FC, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { algoClient, indexerClient } from "../algo";
 import { useProjectInfo } from "../hooks/useProjectInfo";
 import { AppLayout } from "../layouts/AppLayout";
 import { formatAmount } from "../utils/formatAmount";
+import { formatNumber } from "../utils/formatNumber";
 
 export interface ViewProjectPageProps {}
 
@@ -16,11 +18,26 @@ export const ViewProjectPage: FC<ViewProjectPageProps> = (props) => {
       navigate(`/app/projects/${params.projectId}/activate`);
     }
   }, [navigate, params.projectId, projectInfo]);
-  
+
+  const rewardPerComment = projectInfo?.rewardPerComment || 0;
+  const tokenBalance = projectInfo?.tokenBalance || 0;
+
   return (
     <AppLayout>
       <div className="mx-auto max-w-4xl mt-24">
-        <h1 className="text-lg font-bold mb-8">{projectInfo?.name} Overview</h1>
+        <a
+          href={`https://testnet.algoexplorer.io/application/${projectInfo?.appId}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <div className="badge badge-primary badge-outline mb-4">
+            App ID: {projectInfo?.appId}{" "}
+            <ExternalLinkIcon className="h-3 w-3 ml-2" />
+          </div>
+        </a>
+        <h1 className="text-3xl font-bold mb-8">
+          {projectInfo?.name} Overview
+        </h1>
         <div className="stats shadow w-full">
           <div className="stat">
             <div className="stat-figure text-primary">
@@ -39,7 +56,10 @@ export const ViewProjectPage: FC<ViewProjectPageProps> = (props) => {
             </div>
             <div className="stat-title">{projectInfo?.assetUnit} Balance</div>
             <div className="stat-value">
-              {formatAmount(projectInfo?.tokenBalance, projectInfo?.assetDecimals)}
+              {formatAmount(
+                projectInfo?.tokenBalance,
+                projectInfo?.assetDecimals
+              )}
             </div>
             <div className="stat-desc">Used to reward users</div>
           </div>
@@ -62,8 +82,36 @@ export const ViewProjectPage: FC<ViewProjectPageProps> = (props) => {
               </svg>
             </div>
             <div className="stat-title">Reward per Comment</div>
-            <div className="stat-value">{formatAmount(projectInfo?.rewardPerComment, projectInfo?.assetDecimals)}</div>
+            <div className="stat-value">
+              {formatAmount(
+                projectInfo?.rewardPerComment,
+                projectInfo?.assetDecimals
+              )}
+            </div>
             <div className="stat-desc">In {projectInfo?.assetUnit}</div>
+          </div>
+        </div>
+
+        <div className="alert shadow-md mt-8">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info flex-shrink-0 w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>
+              You can reward up to{" "}
+              <strong>{formatNumber(Math.round(tokenBalance / rewardPerComment))} comments</strong>{" "}
+              with the current {projectInfo?.assetUnit} balance
+            </span>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import algosdk from "algosdk";
-import React, { FC } from "react";
+import classNames from "classnames";
+import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { algoClient } from "../algo";
 import { useMeQuery } from "../generated/graphql";
@@ -18,10 +19,12 @@ export const FundAlgorandForm: FC<FundAlgorandFormProps> = ({
   projectInfo,
   onFinish,
 }) => {
+  const [loading, setLoading] = useState(false)
   const { AlgoSigner } = window
   const { data: meData } = useMeQuery()
   const { register, handleSubmit } = useForm<FormData>();
   const onSubmit = async ({ amount }: FormData) => {
+    setLoading(true)
     const params = await algoClient.getTransactionParams().do();
     const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: meData?.me?.address!,
@@ -46,6 +49,7 @@ export const FundAlgorandForm: FC<FundAlgorandFormProps> = ({
     );
 
     onFinish()
+    setLoading(false)
   };
   return (
     <>
@@ -67,7 +71,18 @@ export const FundAlgorandForm: FC<FundAlgorandFormProps> = ({
           </div>
         </div>
         <div className="border-t border-base-300 p-8 flex justify-end">
-          <button type="submit" className="btn btn-primary btn-block">Fund Algorands</button>
+          <button
+            type="submit"
+            className={classNames(
+              "btn btn-primary btn-block",
+              {
+                loading,
+                'opacity-70': loading,
+              }
+            )}
+          >
+            Fund Algorands
+          </button>
         </div>
       </form>
     </>

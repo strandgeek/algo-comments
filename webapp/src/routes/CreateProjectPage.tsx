@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { AppLayout } from "../layouts/AppLayout";
 import { useNavigate } from "react-router-dom";
 import { useCreateProjectMutation, useMeQuery } from "../generated/graphql";
@@ -7,6 +7,7 @@ import { algoClient, indexerClient } from "../algo";
 import algosdk from "algosdk";
 import { toast } from "react-toastify";
 import contract from "../contract.json";
+import classNames from "classnames";
 
 export interface CreateProjectPageProps {}
 
@@ -40,12 +41,17 @@ const getAssetById = async (assetId: string): Promise<AssetParams | null> => {
 };
 
 export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<FormData>();
   const [createProjectMutate] = useCreateProjectMutation();
   const { data: meData } = useMeQuery();
 
-  const deployApp = async (): Promise<{
+  const deployApp = async ({
+    rewardAmountPerComment,
+  }: {
+    rewardAmountPerComment: number,
+  }): Promise<{
     appId: number;
     appAddress: string;
   }> => {
@@ -68,7 +74,7 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
         Buffer.from(contract.clear_base64, "base64")
       ),
       appArgs: [
-        algosdk.encodeUint64(1000)
+        algosdk.encodeUint64(rewardAmountPerComment)
       ],
       onComplete: 0,
       foreignAssets: [],
@@ -98,13 +104,16 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
     };
   };
 
-  const onSubmit = async ({ name, assetId }: FormData) => {
+  const onSubmit = async ({ name, assetId, rewardAmountPerComment }: FormData) => {
+    setLoading(true)
     const asset = await getAssetById(assetId);
     if (!asset) {
       toast.error("Could not locate asset on Testnet");
       return;
     }
-    const { appId, appAddress } = await deployApp();
+    const { appId, appAddress } = await deployApp({
+      rewardAmountPerComment: parseFloat(rewardAmountPerComment) * 10**asset.decimals,
+    });
     try {
       const res = await createProjectMutate({
         variables: {
@@ -119,10 +128,11 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
           },
         },
       });
-      navigate(`/app/projects/${res.data?.createProject.id}`);
+      navigate(`/app/projects/${res.data?.createProject.id}/activate`);
     } catch (error) {
       toast.error("Could not create project");
     }
+    setLoading(false)
   };
   return (
     <AppLayout>
@@ -165,7 +175,7 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
                 type="text"
                 placeholder="5"
                 className="input input-bordered w-full"
-                {...register("name")}
+                {...register("rewardAmountPerComment")}
               />
               <label className="label">
                 <span className="label-text-alt">
@@ -173,9 +183,18 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
                 </span>
               </label>
             </div>
-            <button type="submit" className="btn btn-primary mt-4 w-full">
-              Create
-            </button>
+            <button
+            type="submit"
+            className={classNames(
+              "btn btn-primary btn-block",
+              {
+                loading,
+                'opacity-70': loading,
+              }
+            )}
+          >
+            Create
+          </button>
           </form>
         </div>
       </div>
