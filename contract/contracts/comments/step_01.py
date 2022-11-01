@@ -25,7 +25,7 @@ def approval():
     set_reward_per_comment = Seq(
         [
             Assert(is_owner),
-            App.globalPut(global_reward_per_comment, Txn.application_args[0]),
+            App.globalPut(global_reward_per_comment, Btoi(Txn.application_args[1])),
             Approve(),
         ]
     )
