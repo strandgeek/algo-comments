@@ -95,16 +95,12 @@ export class ProjectResolver {
     })
   }
 
-  @Authorized()
   @Query(() => Project, { nullable: true })
   async project(
     @Arg("id") id: string,
     @Ctx() ctx: Context
   ): Promise<Project | null> {
-    const { me, prisma } = ctx
-    if (!me) {
-      return null
-    }
+    const { prisma } = ctx
     return prisma.project.findUniqueOrThrow({
       where: {
         id,

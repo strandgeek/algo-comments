@@ -9,13 +9,14 @@ import { buildSchema } from "type-graphql";
 import { db } from "../db";
 
 // API Routes
-import { metadataRouter } from './routes/metadata';
+// import { metadataRouter } from './routes/metadata';
 
 // GraphQL Resolvers
 import { AuthResolver } from "../graphql/resolvers/Auth";
 import { authChecker } from "./authChecker";
 import { ProjectResolver } from "../graphql/resolvers/Project";
 import { ProjectAPIResolver } from "../graphql/resolvers/ProjectAPI";
+import { IpfsResolver } from "../graphql/resolvers/Ipfs";
 
 
 dotenv.config();
@@ -29,6 +30,7 @@ export const bootstrap = async () => {
       ProjectResolver,
       ProjectRelationsResolver,
       ProjectAPIResolver,
+      IpfsResolver,
     ],
     validate: false,
     authChecker,
