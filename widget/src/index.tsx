@@ -1,4 +1,5 @@
 import './polyfill'
+import './index.css'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -18,7 +19,7 @@ function documentReady(fn: () => void) {
 
 
 documentReady(() => {
-  const rootEl = document.querySelector('#root')
+  const rootEl = document.querySelector('#algo-comments-widget')
   const client = new ApolloClient({
     uri: 'http://localhost:4000/graphql',
     cache: new InMemoryCache(),

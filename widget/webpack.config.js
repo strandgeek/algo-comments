@@ -1,11 +1,35 @@
 const nodeExternals = require("webpack-node-externals");
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  entry: "/src/lib/index.tsx",
+  entry: "/src/index.tsx",
+  mode: 'production',
   output: {
     filename: "main.js",
     libraryTarget: "umd",
   },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ],
+    fallback: {
+      crypto: require.resolve("crypto-browserify"),
+      stream: require.resolve("stream-browserify"),
+      assert: require.resolve("assert"),
+      http: require.resolve("stream-http"),
+      https: require.resolve("https-browserify"),
+      os: require.resolve("os-browserify"),
+      url: require.resolve("url"),
+      buffer: require.resolve("buffer"),
+    }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }),
+    new Dotenv(),
+  ],
   module: {
     rules: [
       {
@@ -14,22 +38,36 @@ module.exports = {
         loader: "ts-loader",
       },
       {
-        test: /\.scss$/,
+        test: /\.css$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: "style-loader",
-            options: { injectType: "singletonStyleTag" },
+            loader: 'style-loader',
+            options: { injectType: 'singletonStyleTag' }
           },
           "css-loader",
-          "sass-loader",
-        ],
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  [
+                    "postcss-preset-env",
+                    {
+                      // Options
+                    },
+                  ],
+                ],
+              },
+            },
+          },
+        ]
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        loader: "url-loader",
+        loader: 'url-loader',
       },
-    ],
+    ]
   },
-  externals: [nodeExternals()],
+  // externals: [nodeExternals()],
 };

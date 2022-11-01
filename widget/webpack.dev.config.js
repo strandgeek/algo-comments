@@ -34,7 +34,7 @@ module.exports = {
         loader: "ts-loader",
       },
       {
-        test: /\.scss$/,
+        test: /\.css$/,
         exclude: /node_modules/,
         use: [
           {
@@ -42,7 +42,21 @@ module.exports = {
             options: { injectType: 'singletonStyleTag' }
           },
           "css-loader",
-          "sass-loader"
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  [
+                    "postcss-preset-env",
+                    {
+                      // Options
+                    },
+                  ],
+                ],
+              },
+            },
+          },
         ]
       },
       {
