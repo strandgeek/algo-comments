@@ -28,6 +28,15 @@ export class ProjectCreateInput {
 }
 
 @InputType()
+export class ProjectUpdateInput {
+  @Field()
+  projectId: string;
+
+  @Field()
+  name: string;
+}
+
+@InputType()
 export class ActivateProjectInput {
   @Field()
   projectId: string;
@@ -59,6 +68,40 @@ export class ProjectResolver {
       }
     })
     return project
+  }
+
+  @Authorized()
+  @Mutation(() => Project)
+  async updateProject(
+    @Arg("input") input: ProjectUpdateInput,
+    @Ctx() ctx: Context
+  ): Promise<Project | null> {
+    const { me, prisma } = ctx
+    if (!me) {
+      return null
+    }
+    const project = await prisma.project.findUnique({
+      where: {
+        id: input.projectId,
+      },
+      include: {
+        owner: true,
+      }
+    })
+    if (!project) {
+      throw new Error('project not found')
+    }
+    if (project.owner.address != ctx.me?.address) {
+      throw new Error('forbidden')
+    }
+    return prisma.project.update({
+      where: {
+        id: input.projectId,
+      },
+      data: {
+        name: input.name,
+      }
+    })
   }
 
   @Authorized()
