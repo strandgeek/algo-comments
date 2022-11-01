@@ -66,7 +66,7 @@ export const CreateProjectPage: FC<CreateProjectPageProps> = (props) => {
       numLocalByteSlices: 0,
       numGlobalByteSlices: 2,
       numLocalInts: 0,
-      numGlobalInts: 1,
+      numGlobalInts: 2,
       approvalProgram: new Uint8Array(
         Buffer.from(contract.approval_base64, "base64")
       ),

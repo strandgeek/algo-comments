@@ -11,7 +11,8 @@ IPFS_HASH_LENGTH = 46
 def approval():
     # globals
     global_owner = Bytes("owner")  # byteslice
-    global_reward_per_comment = Bytes("reward_per_comment") #  uint64
+    global_reward_per_comment = Bytes("reward_per_comment") # uint64
+    global_asset_id = Bytes("asset_id") # uint64
 
     # op codes
     op_optin_asset = Bytes("optin_asset")
@@ -41,11 +42,22 @@ def approval():
             }
         ),
         InnerTxnBuilder.Submit(),
+        App.globalPut(global_asset_id, Txn.assets[0]),
         Approve(),
     ])
 
     post_comment= Seq([
         Assert(Len(Txn.note()) >= Int(SLUG_MAX_LENGTH) + Int(IPFS_HASH_LENGTH)),
+        InnerTxnBuilder.Begin(),
+        InnerTxnBuilder.SetFields(
+            {
+                TxnField.type_enum: TxnType.AssetTransfer,
+                TxnField.asset_receiver: Txn.sender(),
+                TxnField.xfer_asset: App.globalGet(global_asset_id),
+                TxnField.asset_amount: App.globalGet(global_reward_per_comment),
+            }
+        ),
+        InnerTxnBuilder.Submit(),
         Approve(),
     ])
 
