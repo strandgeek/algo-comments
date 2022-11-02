@@ -1,3 +1,5 @@
+![GitHub issues](https://img.shields.io/github/issues/strandgeek/algo-comments) ![GitHub last commit](https://img.shields.io/github/last-commit/strandgeek/algo-comments)
+
 # AlgoComments
 
 AlgoComments is a platform that, through Smart Contracts, rewards users who engage by commenting on Algorand Blockchain. It can be easily integrated with any dApp or frontend app such as blogs, ecommerces and so on.
