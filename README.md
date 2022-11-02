@@ -8,7 +8,7 @@ AlgoComments is a platform that, through Smart Contracts, rewards users who enga
 
 ## Quick Links
 - [📹 Video Presentation](https://youtu.be/oJ0gx3LSXzE)
-- [⚡️ AlgoComments Platform](https://algo-comments-blog-demo.strandgeek.com)
+- [⚡️ AlgoComments Platform](https://algo-comments.strandgeek.com)
 - [⚡️ Demo: Blog Using AlgoComments](https://algo-comments-blog-demo.strandgeek.com/coming-soon#comments)
 
 
