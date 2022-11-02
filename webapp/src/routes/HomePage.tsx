@@ -57,7 +57,7 @@ export const HomePage = () => {
             </div>
           </nav>
         </div>
-          <div className="mx-auto max-w-7xl lg:px-8 mt-32">
+          <div className="mx-auto max-w-7xl lg:px-8 mt-20">
             <div className="lg:grid lg:grid-cols-2 lg:gap-12">
               <div className="mx-auto max-w-md px-4 sm:max-w-2xl sm:px-6 sm:text-center lg:px-0 lg:text-left lg:flex lg:items-center">
                 <div className="lg:py-24">
